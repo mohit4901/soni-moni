@@ -24,7 +24,7 @@ app.use(cors({
     'https://soni-moni-frontend.vercel.app' // agar use ho raha hai
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+allowedHeaders: ['Content-Type', 'Authorization', 'token'],
   credentials: true
 }))
 
@@ -42,4 +42,5 @@ app.get('/',(req,res)=>{
 
 
 app.listen(port, ()=> console.log('Server started on PORT : '+ port))
+
 
