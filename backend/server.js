@@ -28,6 +28,7 @@ app.use(cors({
   credentials: true
 }))
 
+app.options('*', cors())
 
 // api endpoints
 app.use('/api/user',userRouter)
@@ -41,3 +42,4 @@ app.get('/',(req,res)=>{
 
 
 app.listen(port, ()=> console.log('Server started on PORT : '+ port))
+
