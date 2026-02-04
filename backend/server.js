@@ -17,7 +17,17 @@ connectCloudinary()
 
 // middlewares
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: [
+    'https://soni-moni.vercel.app',
+    'https://soni-moni-admin.vercel.app',
+    'https://soni-moni-frontend.vercel.app' // agar use ho raha hai
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}))
+
 
 // api endpoints
 app.use('/api/user',userRouter)
@@ -28,5 +38,6 @@ app.use('/api/order',orderRouter)
 app.get('/',(req,res)=>{
     res.send("API Working")
 })
+
 
 app.listen(port, ()=> console.log('Server started on PORT : '+ port))
