@@ -21,20 +21,28 @@ connectCloudinary()
 // ---------------- MIDDLEWARES ----------------
 app.use(express.json())
 
-// ✅ SIMPLE + WORKING CORS (NO OVERSMART)
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'https://soni-moni.vercel.app',
-    'https://soni-moni-admin.vercel.app',
-    'https://soni-moni-frontend.vercel.app'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token'],
-}))
+// ✅ SIMPLE + WORKING CORS (PRODUCTION SAFE)
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:5174',
 
-// ⚠️ IMPORTANT (preflight fix)
+      'https://soni-moni.vercel.app',
+      'https://soni-moni-admin.vercel.app',
+      'https://soni-moni-frontend.vercel.app',
+
+      // 🔥 LIVE DOMAIN (VERY IMPORTANT)
+      'https://monisoniroyalcollection.in',
+      'https://www.monisoniroyalcollection.in'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'token'],
+    credentials: true
+  })
+)
+
+// ✅ PREFLIGHT (MUST)
 app.options('*', cors())
 
 // ---------------- API ROUTES ----------------
@@ -45,10 +53,11 @@ app.use('/api/order', orderRouter)
 
 // ---------------- TEST ROUTE ----------------
 app.get('/', (req, res) => {
-  res.send('API Working')
+  res.send('API Working 🚀')
 })
 
 // ---------------- START SERVER ----------------
 app.listen(port, () => {
   console.log('Server started on PORT : ' + port)
 })
+
