@@ -7,14 +7,19 @@ const About = () => {
   return (
     <div>
 
+      {/* ABOUT US */}
       <div className='text-2xl text-center pt-8 border-t'>
         <Title text1={'ABOUT'} text2={'US'} />
       </div>
 
       <div className='my-10 flex flex-col md:flex-row gap-16'>
-        <img className='w-full md:max-w-[450px]' src={assets.about_img} alt="" />
-        <div className='flex flex-col justify-center gap-6 md:w-2/4 text-gray-600'>
+        <img
+          className='w-full md:max-w-[450px]'
+          src={assets.about_img}
+          alt=""
+        />
 
+        <div className='flex flex-col justify-center gap-6 md:w-2/4 text-gray-600'>
           <p>
             <b className='text-gray-800'>Moni Soni Royal Collection</b> is a
             trusted ethnic wear store known for its elegant and timeless
@@ -38,16 +43,15 @@ const About = () => {
             products, honest pricing, and a smooth shopping experience while
             maintaining the trust we have earned over the years.
           </p>
-
         </div>
       </div>
 
+      {/* WHY CHOOSE US */}
       <div className='text-xl py-4'>
         <Title text1={'WHY'} text2={'CHOOSE US'} />
       </div>
 
       <div className='flex flex-col md:flex-row text-sm mb-20'>
-
         <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
           <b>Premium Quality</b>
           <p className='text-gray-600'>
@@ -70,6 +74,50 @@ const About = () => {
           <p className='text-gray-600'>
             Your satisfaction matters to us. We focus on building long-term
             relationships by offering excellent service and honest support.
+          </p>
+        </div>
+      </div>
+
+      {/* POLICIES */}
+      <div className='text-xl py-4'>
+        <Title text1={'OUR'} text2={'POLICIES'} />
+      </div>
+
+      <div className='max-w-[900px] mx-auto flex flex-col gap-10 text-sm text-gray-600 mb-20 px-4'>
+
+        <div>
+          <b className='text-gray-800'>Shipping Policy</b>
+          <p className='mt-2'>
+            We process and ship orders within 2–4 business days. Delivery
+            timelines may vary depending on your location. We work with
+            reliable courier partners to ensure safe and timely delivery.
+          </p>
+        </div>
+
+        <div>
+          <b className='text-gray-800'>Privacy Policy</b>
+          <p className='mt-2'>
+            Your privacy is important to us. Any personal information shared
+            with us is used only for order processing and customer support.
+            We do not sell or share your data with third parties.
+          </p>
+        </div>
+
+        <div>
+          <b className='text-gray-800'>Refund Policy</b>
+          <p className='mt-2'>
+            Refunds or exchanges are applicable only in case of damaged or
+            incorrect products. Requests must be raised within 7 days of
+            delivery along with proper proof.
+          </p>
+        </div>
+
+        <div>
+          <b className='text-gray-800'>Terms of Service</b>
+          <p className='mt-2'>
+            By using our website, you agree to follow our policies and terms.
+            Product colors may slightly vary due to lighting and screen
+            differences. All disputes are subject to local jurisdiction.
           </p>
         </div>
 
