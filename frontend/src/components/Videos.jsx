@@ -46,16 +46,16 @@ const Videos = () => {
       </div>
 
       {/* Show More Button */}
-      <div className="mt-16 text-center">
-        <a
-          href="https://www.instagram.com/monisoniroyalcollectionjhajjar/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block border border-black px-10 py-3 text-sm tracking-wide hover:bg-black hover:text-white transition"
-        >
-          SHOW MORE ON INSTAGRAM
-        </a>
-      </div>
+     <div className="mt-16 text-center">
+  <a
+    href="https://www.instagram.com/royalcollection___22?igsh=NXQzMm0wazcwYXBh&utm_source=qr"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-block border border-black px-10 py-3 text-sm tracking-wide hover:bg-black hover:text-white transition"
+  >
+    SHOW MORE ON INSTAGRAM
+  </a>
+</div>
 
     </section>
   )
