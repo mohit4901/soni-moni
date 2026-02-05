@@ -10,18 +10,14 @@ import productRouter from './routes/productRoute.js'
 import cartRouter from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
 
-// ---------------- APP CONFIG ----------------
 const app = express()
 const port = process.env.PORT || 4000
 
-// ---------------- DB & CLOUD ----------------
 connectDB()
 connectCloudinary()
 
-// ---------------- MIDDLEWARES ----------------
 app.use(express.json())
 
-// ✅ ALLOWED ORIGINS
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
@@ -30,13 +26,10 @@ const allowedOrigins = [
   'https://soni-moni-frontend.vercel.app'
 ]
 
-// ✅ CORS CONFIG (PRODUCTION SAFE)
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (Postman, server-to-server)
       if (!origin) return callback(null, true)
-
       if (allowedOrigins.includes(origin)) {
         return callback(null, true)
       } else {
@@ -49,21 +42,17 @@ app.use(
   })
 )
 
-// ✅ HANDLE PREFLIGHT REQUESTS
-app.options('*', cors())
+// ❌ app.options('*', cors())  ← REMOVE THIS LINE
 
-// ---------------- API ROUTES ----------------
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/order', orderRouter)
 
-// ---------------- TEST ROUTE ----------------
 app.get('/', (req, res) => {
   res.send('API Working 🚀')
 })
 
-// ---------------- START SERVER ----------------
 app.listen(port, () => {
   console.log(`Server started on PORT : ${port}`)
 })
