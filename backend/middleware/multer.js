@@ -1,19 +1,21 @@
 import multer from "multer";
 
-const storage = multer.diskStorage({
-    filename: function (req, file, callback) {
-        callback(null, file.originalname)
-    }
-})
+// ✅ MEMORY STORAGE (Vercel compatible)
+const storage = multer.memoryStorage();
 
-const upload = multer({ storage })
+const upload = multer({ storage });
 
-// ✅ ONLY THIS WRAPPER ADDED
+// ✅ OPTIONS SAFE
 const uploadMiddleware = (req, res, next) => {
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(200)
-    }
-    upload(req, res, next)
-}
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  upload.fields([
+    { name: 'image1', maxCount: 1 },
+    { name: 'image2', maxCount: 1 },
+    { name: 'image3', maxCount: 1 },
+    { name: 'image4', maxCount: 1 },
+  ])(req, res, next);
+};
 
-export default uploadMiddleware
+export default uploadMiddleware;
