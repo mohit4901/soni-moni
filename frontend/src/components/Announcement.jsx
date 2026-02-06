@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 const messages = [
-  "WE SHIP ALL OVER INDIA",
-  "Cash On Delivery is not Available"
+  "WE SHIP WORLD WIDE",
+  "WE SHIP WORLD WIDE"
 ];
 
 const AnnouncementBar = () => {
