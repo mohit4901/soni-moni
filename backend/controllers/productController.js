@@ -1,8 +1,7 @@
-import { v2 as cloudinary } from "cloudinary"
-import productModel from "../models/productModel.js"
-import fs from "fs"
+import { v2 as cloudinary } from "cloudinary";
+import productModel from "../models/productModel.js";
 
-// function for add product
+// ADD PRODUCT
 const addProduct = async (req, res) => {
   try {
     const {
@@ -14,27 +13,28 @@ const addProduct = async (req, res) => {
       sizes,
       colour,
       bestseller
-    } = req.body
+    } = req.body;
 
-    const image1 = req.files.image1 && req.files.image1[0]
-    const image2 = req.files.image2 && req.files.image2[0]
-    const image3 = req.files.image3 && req.files.image3[0]
-    const image4 = req.files.image4 && req.files.image4[0]
+    // ✅ images array from multer.memoryStorage
+    const files = req.files;
 
-    const images = [image1, image2, image3, image4].filter(Boolean)
+    if (!files || files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one image is required"
+      });
+    }
 
-    const imagesUrl = await Promise.all(
-      images.map(async (item) => {
-        const result = await cloudinary.uploader.upload(item.path, {
-          resource_type: "image",
-        })
+    // 🔥 PARALLEL CLOUDINARY UPLOAD (FIX 5)
+    const uploadPromises = files.map((file) =>
+      cloudinary.uploader.upload(
+        `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
+        { resource_type: "image" }
+      )
+    );
 
-        // 🔥 CRITICAL FIX FOR VERCEL
-        fs.unlinkSync(item.path)
-
-        return result.secure_url
-      })
-    )
+    const results = await Promise.all(uploadPromises);
+    const imageUrls = results.map((r) => r.secure_url);
 
     const productData = {
       name,
@@ -44,60 +44,68 @@ const addProduct = async (req, res) => {
       subCategory: subCategory || "",
       sizes: sizes ? JSON.parse(sizes) : [],
       colour: colour || "",
-      bestseller: bestseller === "true",
-      image: imagesUrl,
-      date: Date.now(),
-    }
+      bestseller: bestseller === "true" || bestseller === true,
+      image: imageUrls,
+      date: Date.now()
+    };
 
-    const product = new productModel(productData)
-    await product.save()
+    const product = new productModel(productData);
+    await product.save();
 
-    res.json({ success: true, message: "Product Added" })
+    res.status(201).json({
+      success: true,
+      message: "Product Added"
+    });
+
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ success: false, message: error.message })
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Product upload failed"
+    });
   }
-}
+};
 
-// list products
+// LIST PRODUCTS
 const listProducts = async (req, res) => {
   try {
-    const { category, subCategory } = req.query
-    let filter = {}
+    const { category, subCategory } = req.query;
+    let filter = {};
 
-    if (category) filter.category = category
-    if (subCategory) filter.subCategory = subCategory
+    if (category) filter.category = category;
+    if (subCategory) filter.subCategory = subCategory;
 
-    const products = await productModel.find(filter)
-    res.json({ success: true, products })
+    const products = await productModel.find(filter);
+    res.json({ success: true, products });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ success: false, message: error.message })
+    console.error(error);
+    res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
-// remove product
+// REMOVE PRODUCT
 const removeProduct = async (req, res) => {
   try {
-    await productModel.findByIdAndDelete(req.body.id)
-    res.json({ success: true, message: "Product Removed" })
+    await productModel.findByIdAndDelete(req.body.id);
+    res.json({ success: true, message: "Product Removed" });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ success: false, message: error.message })
+    console.error(error);
+    res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
-// single product
+// SINGLE PRODUCT
 const singleProduct = async (req, res) => {
   try {
-    const { productId } = req.body
-    const product = await productModel.findById(productId)
-    res.json({ success: true, product })
+    const { productId } = req.body;
+    const product = await productModel.findById(productId);
+    res.json({ success: true, product });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ success: false, message: error.message })
+    console.error(error);
+    res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
-export { listProducts, addProduct, removeProduct, singleProduct }
+export { listProducts, addProduct, removeProduct, singleProduct };
+
 
