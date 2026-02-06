@@ -132,7 +132,7 @@ const Footer = () => {
           "
         >
           <p className="text-center md:text-left">
-            © 2026 Soni Moni Collection. All Rights Reserved.
+            © 2026 Moni Soni Royal Collection. All Rights Reserved.
           </p>
           <p className="text-center md:text-left">
             Designed with ❤️ by Mohit Mudgil
@@ -165,3 +165,4 @@ const Footer = () => {
 }
 
 export default Footer
+
