@@ -8,20 +8,22 @@ import imageCompression from "browser-image-compression";
 const Add = ({ token }) => {
   const [images, setImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
-
-  const [quality, setQuality] = useState(0.8); // 🔥 compression quality slider
+  const [quality, setQuality] = useState(0.8);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+
   const [category, setCategory] = useState("kurti");
   const [subCategory, setSubCategory] = useState("");
+
   const [sizes, setSizes] = useState([]);
   const [colour, setColour] = useState("");
   const [bestseller, setBestseller] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
-  // 🔥 image compression + validation
+  /* ---------------- IMAGE COMPRESSION ---------------- */
   const processImage = async (file) => {
     const options = {
       maxSizeMB: 1.2,
@@ -33,13 +35,12 @@ const Add = ({ token }) => {
     const compressed = await imageCompression(file, options);
 
     if (compressed.size > 3 * 1024 * 1024) {
-      throw new Error("Image still larger than 3MB");
+      throw new Error("Image must be under 3MB");
     }
 
     return compressed;
   };
 
-  // 🔥 handle image select / drop
   const handleImageAdd = async (file, index) => {
     try {
       toast.info("Compressing image...");
@@ -53,7 +54,6 @@ const Add = ({ token }) => {
     }
   };
 
-  // 🔥 drag & drop handlers
   const handleDrop = async (e) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files).slice(0, 4);
@@ -63,11 +63,12 @@ const Add = ({ token }) => {
     }
   };
 
+  /* ---------------- SUBMIT ---------------- */
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
     if (images.length === 0) {
-      toast.error("Please upload at least 1 image");
+      toast.error("Please upload at least one image");
       return;
     }
 
@@ -98,10 +99,8 @@ const Add = ({ token }) => {
             token
           },
           timeout: 30000,
-          onUploadProgress: (progressEvent) => {
-            const percent = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
+          onUploadProgress: (e) => {
+            const percent = Math.round((e.loaded * 100) / e.total);
             setUploadProgress(percent);
           }
         }
@@ -109,6 +108,7 @@ const Add = ({ token }) => {
 
       if (response.data.success) {
         toast.success("Product added successfully");
+
         setName("");
         setDescription("");
         setPrice("");
@@ -137,7 +137,7 @@ const Add = ({ token }) => {
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      {/* 🔥 Drag & Drop + Preview */}
+      {/* ---------------- IMAGES ---------------- */}
       <div>
         <p className="mb-2">Upload Images (Drag & Drop / Click)</p>
         <div className="flex gap-3">
@@ -164,14 +164,13 @@ const Add = ({ token }) => {
             </label>
           ))}
         </div>
-        <p className="text-xs text-gray-500 mt-1">
-          Max 4 images • Auto compressed • Drag files here
-        </p>
       </div>
 
-      {/* 🔥 Compression Quality Slider */}
+      {/* ---------------- QUALITY SLIDER ---------------- */}
       <div className="w-full max-w-xs">
-        <p className="mb-1">Image Quality: {Math.round(quality * 100)}%</p>
+        <p className="mb-1">
+          Image Quality: {Math.round(quality * 100)}%
+        </p>
         <input
           type="range"
           min="0.4"
@@ -182,7 +181,7 @@ const Add = ({ token }) => {
         />
       </div>
 
-      {/* 🔥 Upload Progress */}
+      {/* ---------------- PROGRESS ---------------- */}
       {loading && (
         <div className="w-full max-w-md">
           <div className="h-2 bg-gray-200 rounded">
@@ -195,7 +194,7 @@ const Add = ({ token }) => {
         </div>
       )}
 
-      {/* Product Fields */}
+      {/* ---------------- NAME ---------------- */}
       <input
         required
         value={name}
@@ -204,6 +203,7 @@ const Add = ({ token }) => {
         className="px-3 py-2 border"
       />
 
+      {/* ---------------- DESCRIPTION ---------------- */}
       <textarea
         required
         value={description}
@@ -212,6 +212,44 @@ const Add = ({ token }) => {
         className="px-3 py-2 border"
       />
 
+      {/* ---------------- CATEGORY ---------------- */}
+      <div className="flex gap-4">
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="px-3 py-2 border"
+        >
+          <option value="kurti">Kurti</option>
+          <option value="lehenga">Lehenga</option>
+          <option value="gown">Gown</option>
+          <option value="saree">Saree</option>
+          <option value="suit">Suit</option>
+        </select>
+
+        <select
+          value={subCategory}
+          onChange={(e) => setSubCategory(e.target.value)}
+          className="px-3 py-2 border"
+        >
+          <option value="">None</option>
+          <option value="cotton">Cotton</option>
+          <option value="rayon">Rayon</option>
+          <option value="anarkali">Anarkali</option>
+          <option value="straight">Straight</option>
+          <option value="festive">Festive</option>
+          <option value="party">Party Wear</option>
+          <option value="bridal">Bridal</option>
+          <option value="silk">Silk</option>
+          <option value="chiffon">Chiffon</option>
+          <option value="georgette">Georgette</option>
+          <option value="salwar">Salwar</option>
+          <option value="organza">Organza</option>
+          <option value="sharara">Sharara</option>
+          <option value="palazzo">Palazzo</option>
+        </select>
+      </div>
+
+      {/* ---------------- PRICE ---------------- */}
       <input
         type="number"
         value={price}
@@ -219,6 +257,45 @@ const Add = ({ token }) => {
         placeholder="Price"
         className="px-3 py-2 border w-40"
       />
+
+      {/* ---------------- COLOUR ---------------- */}
+      <input
+        value={colour}
+        onChange={(e) => setColour(e.target.value)}
+        placeholder="Colour (optional)"
+        className="px-3 py-2 border"
+      />
+
+      {/* ---------------- SIZES ---------------- */}
+      <div className="flex gap-3">
+        {["S", "M", "L", "XL", "XXL"].map((size) => (
+          <p
+            key={size}
+            onClick={() =>
+              setSizes((prev) =>
+                prev.includes(size)
+                  ? prev.filter((i) => i !== size)
+                  : [...prev, size]
+              )
+            }
+            className={`px-3 py-1 cursor-pointer ${
+              sizes.includes(size) ? "bg-pink-100" : "bg-slate-200"
+            }`}
+          >
+            {size}
+          </p>
+        ))}
+      </div>
+
+      {/* ---------------- BESTSELLER ---------------- */}
+      <label className="flex gap-2">
+        <input
+          type="checkbox"
+          checked={bestseller}
+          onChange={() => setBestseller((p) => !p)}
+        />
+        Add to bestseller
+      </label>
 
       <button
         disabled={loading}
