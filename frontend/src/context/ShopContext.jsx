@@ -13,8 +13,7 @@ const ShopContextProvider = (props) => {
     const currency = '₹';
 
     const SHIPPING_CHARGES = {
-        haryana: 150,
-        india: 300
+        india: 100
     };
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -180,3 +179,4 @@ const ShopContextProvider = (props) => {
 };
 
 export default ShopContextProvider;
+
