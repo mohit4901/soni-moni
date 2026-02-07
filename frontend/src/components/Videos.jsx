@@ -11,7 +11,7 @@ const Videos = () => {
 
     const interval = setInterval(() => {
       container.scrollBy({
-        left: 320,
+        left: 260,
         behavior: 'smooth',
       })
 
@@ -27,54 +27,64 @@ const Videos = () => {
   }, [])
 
   return (
-    <section className="w-full py-24 bg-[#f7e9d6] overflow-hidden">
+    <section className="w-full py-20 bg-[#f7e9d6] overflow-hidden">
 
       {/* Title */}
       <div className="text-center mb-14">
-        <Title text1="OUR" text2="VIDEOS" />
+        <Title text1="SHOP BY" text2="FABRIC" />
       </div>
 
       {/* Auto Scroll Videos */}
       <div
         ref={scrollRef}
-        className="flex gap-8 px-10 overflow-x-auto no-scrollbar scroll-smooth"
+        className="flex gap-6 px-6 overflow-x-auto no-scrollbar scroll-smooth"
       >
-        {/* videos loop */}
         {[...videos, ...videos].map((video, index) => (
           <VideoCard key={index} src={video} />
         ))}
       </div>
 
       {/* Show More Button */}
-     <div className="mt-16 text-center">
-  <a
-    href="https://www.instagram.com/royalcollection___22?igsh=NXQzMm0wazcwYXBh&utm_source=qr"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-block border border-black px-10 py-3 text-sm tracking-wide hover:bg-black hover:text-white transition"
-  >
-    SHOW MORE ON INSTAGRAM
-  </a>
-</div>
+      <div className="mt-16 text-center">
+        <a
+          href="https://www.instagram.com/royalcollection___22?igsh=NXQzMm0wazcwYXBh&utm_source=qr"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block border border-black px-10 py-3 text-sm tracking-wide hover:bg-black hover:text-white transition"
+        >
+          SHOW MORE ON INSTAGRAM
+        </a>
+      </div>
 
     </section>
   )
 }
 
-/* Video Card */
+/* 🔥 VERTICAL VIDEO CARD (MOBILE FRIENDLY) */
 const VideoCard = ({ src }) => (
-  <div className="min-w-[300px] flex flex-col items-center">
-    <div className="relative w-full h-[260px] rounded-[22px] overflow-hidden">
-
+  <div
+    className="
+      min-w-[200px]
+      sm:min-w-[240px]
+      md:min-w-[260px]
+      flex justify-center
+    "
+  >
+    <div
+      className="
+        w-full
+        aspect-[9/16]
+        overflow-hidden
+      "
+    >
       <video
         src={src}
         autoPlay
         loop
         muted
         playsInline
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain bg-black"
       />
-
     </div>
   </div>
 )
