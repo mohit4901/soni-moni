@@ -34,8 +34,8 @@ const Categories = () => {
         "
       >
         <CategoryCard
-          img={assets.category_kurti}
-          label="KURTIS"
+          img={assets.morgan}
+          label="ORGANZA"
           onClick={() => handleCategoryClick('kurti')}
         />
         <CategoryCard
@@ -44,18 +44,23 @@ const Categories = () => {
           onClick={() => handleCategoryClick('lehenga')}
         />
         <CategoryCard
-          img={assets.category_saree}
-          label="SAREES"
+          img={assets.mgeor}
+          label="GEORGETTE"
           onClick={() => handleCategoryClick('saree')}
         />
         <CategoryCard
-          img={assets.category_gown}
-          label="GOWNS"
+          img={assets.mlinen}
+          label="LINEN"
           onClick={() => handleCategoryClick('gown')}
         />
         <CategoryCard
           img={assets.category_suit}
-          label="SUITS"
+          label="COTTON"
+          onClick={() => handleCategoryClick('suit')}
+        />
+         <CategoryCard
+          img={assets.mbur}
+          label="BURBERRY"
           onClick={() => handleCategoryClick('suit')}
         />
       </div>
