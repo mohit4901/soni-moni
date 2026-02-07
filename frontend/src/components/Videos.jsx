@@ -60,33 +60,34 @@ const Videos = () => {
   )
 }
 
-/* 🔥 VERTICAL VIDEO CARD (MOBILE FRIENDLY) */
-const VideoCard = ({ src }) => (
-  <div
-    className="
-      min-w-[200px]
-      sm:min-w-[240px]
-      md:min-w-[260px]
-      flex justify-center
-    "
-  >
-    <div
-      className="
-        w-full
-        aspect-[9/16]
-        overflow-hidden
-      "
-    >
-      <video
-        src={src}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="w-full h-full object-contain bg-black"
-      />
+/* ✅ VIDEO CARD – AUTOPLAY GUARANTEED */
+const VideoCard = ({ src }) => {
+  const videoRef = useRef(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = true
+    video.play().catch(() => {})
+  }, [])
+
+  return (
+    <div className="min-w-[200px] sm:min-w-[240px] md:min-w-[260px] flex justify-center">
+      <div className="w-full aspect-[9/16] overflow-hidden">
+        <video
+          ref={videoRef}
+          src={src}
+          muted
+          loop
+          autoPlay
+          playsInline
+          preload="auto"
+          className="w-full h-full object-contain bg-black"
+        />
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default Videos
