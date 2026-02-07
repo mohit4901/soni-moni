@@ -16,7 +16,7 @@ const Categories = () => {
 
       {/* Section Title */}
       <div className="text-center">
-        <Title text1="OUR" text2="CATEGORIES" />
+        <Title text1="SHOP BY" text2="FABRIC" />
       </div>
 
       {/* Categories Grid */}
@@ -39,8 +39,8 @@ const Categories = () => {
           onClick={() => handleCategoryClick('kurti')}
         />
         <CategoryCard
-          img={assets.category_lehenga}
-          label="LEHENGA"
+          img={assets.msilk}
+          label="SILK"
           onClick={() => handleCategoryClick('lehenga')}
         />
         <CategoryCard
