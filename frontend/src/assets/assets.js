@@ -13,6 +13,12 @@ import gallery_2 from './gallery_2.avif'
 import gallery_3 from './gallery_3.avif'
 import gallery_4 from './gallery_4.avif'
 import gallery_5 from './gallery_5.avif'
+import msilk from './msilk.avif'
+import mgeor from './mgeor.jpg'
+import morgan from './morgan.avif'
+import mbur from './mbur.avif'
+import mcotton from './mcotton.avif'
+import mlinen from './mlinen.avif'
 import gallery_6 from './gallery_6.avif'
 import video_thumb_1 from './video_thumb_1.avif'
 import video_thumb_2 from './video_thumb_2.avif'
@@ -100,6 +106,12 @@ export const assets = {
   category_gown,
   category_suit,
     quality_icon,
+    msilk,
+  mgeor,
+  morgan,
+  mbur,
+  mcotton,
+  mlinen,
     search_icon,
     star_dull_icon,
     star_icon,
@@ -153,4 +165,5 @@ export const products = [
         date: 1716634345448,
         bestseller: true
     }
+
 ]
