@@ -220,10 +220,12 @@ const Add = ({ token }) => {
           className="px-3 py-2 border"
         >
           <option value="kurti">Kurti</option>
-          <option value="lehenga">Lehenga</option>
-          <option value="gown">Gown</option>
-          <option value="saree">Saree</option>
-          <option value="suit">Suit</option>
+          <option value="Suit">Suit</option>
+          <option value="Office Wear">Office Wear</option>
+          <option value="Party Wear">Party Wear</option>
+          <option value="Daily Wear">Daily Wear</option>
+          <option value="Festival Wear">Festival Wear</option>
+          <option value="Bridal Wear">Bridal Wear</option>
         </select>
 
         <select
@@ -231,21 +233,12 @@ const Add = ({ token }) => {
           onChange={(e) => setSubCategory(e.target.value)}
           className="px-3 py-2 border"
         >
-          <option value="">None</option>
-          <option value="cotton">Cotton</option>
-          <option value="rayon">Rayon</option>
-          <option value="anarkali">Anarkali</option>
-          <option value="straight">Straight</option>
-          <option value="festive">Festive</option>
-          <option value="party">Party Wear</option>
-          <option value="bridal">Bridal</option>
-          <option value="silk">Silk</option>
-          <option value="chiffon">Chiffon</option>
-          <option value="georgette">Georgette</option>
-          <option value="salwar">Salwar</option>
-          <option value="organza">Organza</option>
-          <option value="sharara">Sharara</option>
-          <option value="palazzo">Palazzo</option>
+          <option value="Burberry">Burberry</option>
+          <option value="Cotton">Cotton</option>
+          <option value="Organza">Organza</option>
+          <option value="Silk">Silk</option>
+          <option value="Georgette">Georgette</option>
+          <option value="Linen">Linen</option>
         </select>
       </div>
 
@@ -308,3 +301,4 @@ const Add = ({ token }) => {
 };
 
 export default Add;
+
