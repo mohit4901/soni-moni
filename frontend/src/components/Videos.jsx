@@ -31,7 +31,7 @@ const Videos = () => {
 
       {/* Title */}
       <div className="text-center mb-14">
-        <Title text1="SHOP BY" text2="FABRIC" />
+        <Title text1="WATCH &" text2="BUY" />
       </div>
 
       {/* Auto Scroll Videos */}
