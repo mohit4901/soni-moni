@@ -80,7 +80,7 @@ const About = () => {
         <div>
           <b className="text-gray-800 block mb-2">Shipping Policy</b>
           <p>
-            Orders are processed within 1–3 business days. Delivery timelines
+            Orders are processed within 5-7 business days. Delivery timelines
             depend on your location and courier service availability.
           </p>
         </div>
@@ -95,13 +95,6 @@ const About = () => {
         </div>
 
         {/* REFUND */}
-        <div>
-          <b className="text-gray-800 block mb-2">Refund Policy</b>
-          <p>
-            Returns and exchanges are accepted within 7 days of delivery,
-            provided the product is unused and in original condition.
-          </p>
-        </div>
 
         {/* TERMS */}
         <div>
@@ -156,4 +149,5 @@ const About = () => {
 }
 
 export default About
+
 
