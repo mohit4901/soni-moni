@@ -15,8 +15,14 @@ const addProduct = async (req, res) => {
       bestseller
     } = req.body;
 
-    // ✅ images array from multer.memoryStorage
-    const files = req.files;
+    // ✅ NORMALIZE FILES (MAIN FIX)
+    let files = [];
+
+    if (Array.isArray(req.files)) {
+      files = req.files;
+    } else if (req.files) {
+      files = Object.values(req.files).flat();
+    }
 
     if (!files || files.length === 0) {
       return res.status(400).json({
@@ -25,7 +31,7 @@ const addProduct = async (req, res) => {
       });
     }
 
-    // 🔥 PARALLEL CLOUDINARY UPLOAD (FIX 5)
+    // ✅ CLOUDINARY UPLOAD
     const uploadPromises = files.map((file) =>
       cloudinary.uploader.upload(
         `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
@@ -36,13 +42,23 @@ const addProduct = async (req, res) => {
     const results = await Promise.all(uploadPromises);
     const imageUrls = results.map((r) => r.secure_url);
 
+    // ✅ SAFE SIZE PARSE
+    let parsedSizes = [];
+    if (sizes) {
+      try {
+        parsedSizes = JSON.parse(sizes);
+      } catch {
+        parsedSizes = [];
+      }
+    }
+
     const productData = {
       name,
       description,
       category,
       price: Number(price),
       subCategory: subCategory || "",
-      sizes: sizes ? JSON.parse(sizes) : [],
+      sizes: parsedSizes,
       colour: colour || "",
       bestseller: bestseller === "true" || bestseller === true,
       image: imageUrls,
@@ -58,10 +74,10 @@ const addProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("ADD PRODUCT ERROR 👉", error);
     res.status(500).json({
       success: false,
-      message: "Product upload failed"
+      message: error.message
     });
   }
 };
@@ -69,7 +85,7 @@ const addProduct = async (req, res) => {
 // LIST PRODUCTS
 const listProducts = async (req, res) => {
   try {
-    const { category, subCategory } = req.query;
+    const { category, subCategory } = req.query indicate?
     let filter = {};
 
     if (category) filter.category = category;
@@ -107,5 +123,4 @@ const singleProduct = async (req, res) => {
 };
 
 export { listProducts, addProduct, removeProduct, singleProduct };
-
 
