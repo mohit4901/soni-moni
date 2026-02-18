@@ -85,7 +85,7 @@ const addProduct = async (req, res) => {
 // LIST PRODUCTS
 const listProducts = async (req, res) => {
   try {
-    const { category, subCategory } = req.query indicate?
+    const { category, subCategory } = req.query;
     let filter = {};
 
     if (category) filter.category = category;
@@ -123,4 +123,5 @@ const singleProduct = async (req, res) => {
 };
 
 export { listProducts, addProduct, removeProduct, singleProduct };
+
 
