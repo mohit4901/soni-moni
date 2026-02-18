@@ -15,7 +15,7 @@ const addProduct = async (req, res) => {
       bestseller
     } = req.body;
 
-    // ✅ NORMALIZE FILES (MAIN FIX)
+    // ✅ NORMALIZE FILES
     let files = [];
 
     if (Array.isArray(req.files)) {
@@ -24,10 +24,10 @@ const addProduct = async (req, res) => {
       files = Object.values(req.files).flat();
     }
 
-    if (!files || files.length === 0) {
+    if (!files || files.length === 0 || !files[0].buffer) {
       return res.status(400).json({
         success: false,
-        message: "At least one image is required"
+        message: "At least one valid image is required"
       });
     }
 
@@ -52,10 +52,13 @@ const addProduct = async (req, res) => {
       }
     }
 
+    // ✅ CATEGORY NORMALIZATION (MAIN FIX)
+    const safeCategory = category?.toLowerCase().trim();
+
     const productData = {
       name,
       description,
-      category,
+      category: safeCategory,
       price: Number(price),
       subCategory: subCategory || "",
       sizes: parsedSizes,
@@ -88,11 +91,13 @@ const listProducts = async (req, res) => {
     const { category, subCategory } = req.query;
     let filter = {};
 
-    if (category) filter.category = category;
+    // ✅ normalize filters too (future safe)
+    if (category) filter.category = category.toLowerCase().trim();
     if (subCategory) filter.subCategory = subCategory;
 
     const products = await productModel.find(filter);
     res.json({ success: true, products });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: error.message });
@@ -104,6 +109,7 @@ const removeProduct = async (req, res) => {
   try {
     await productModel.findByIdAndDelete(req.body.id);
     res.json({ success: true, message: "Product Removed" });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: error.message });
@@ -116,6 +122,7 @@ const singleProduct = async (req, res) => {
     const { productId } = req.body;
     const product = await productModel.findById(productId);
     res.json({ success: true, product });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: error.message });
@@ -123,5 +130,4 @@ const singleProduct = async (req, res) => {
 };
 
 export { listProducts, addProduct, removeProduct, singleProduct };
-
 
