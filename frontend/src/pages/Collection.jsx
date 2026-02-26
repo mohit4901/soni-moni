@@ -9,7 +9,9 @@ const PRODUCTS_PER_PAGE = 20
 
 const Collection = () => {
 
-  const { products, search, showSearch } = useContext(ShopContext)
+  // ✅ ONLY ADDITION HERE (setGlobalSubCategory)
+  const { products, search, showSearch, setSubCategory: setGlobalSubCategory } = useContext(ShopContext)
+
   const location = useLocation()
 
   const [showFilter, setShowFilter] = useState(false)
@@ -18,20 +20,18 @@ const Collection = () => {
   const [subCategory, setSubCategory] = useState([])
   const [sortType, setSortType] = useState('relavent')
 
-  // pagination
   const [currentPage, setCurrentPage] = useState(1)
 
-  /* ✅ ONLY CHANGE: READ subCategory FROM URL */
+  /* ✅ UPDATED EFFECT — URL → CONTEXT SYNC */
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const urlSubCategory = params.get('subCategory')
 
     if (urlSubCategory) {
-      setSubCategory([urlSubCategory])   // 🔥 sirf subCategory set
+      setSubCategory([urlSubCategory])     // existing UI logic
+      setGlobalSubCategory(urlSubCategory) // 🔥 NEW LINE (main fix)
     }
   }, [location.search])
-
-  /* ---------- FILTER HANDLERS (UNCHANGED) ---------- */
 
   const toggleCategory = (e) => {
     setCurrentPage(1)
@@ -96,8 +96,6 @@ const Collection = () => {
     sortProduct()
   }, [sortType])
 
-  /* ---------- PAGINATION ---------- */
-
   const totalPages = Math.ceil(filterProducts.length / PRODUCTS_PER_PAGE)
 
   const paginatedProducts = filterProducts.slice(
@@ -108,7 +106,6 @@ const Collection = () => {
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
 
-      {/* ---------- FILTER SIDEBAR ---------- */}
       <div className="min-w-60">
 
         <p
@@ -123,7 +120,6 @@ const Collection = () => {
           />
         </p>
 
-        {/* CATEGORY FILTER */}
         <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
           <p className="mb-3 text-sm font-medium">CATEGORIES</p>
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
@@ -142,7 +138,6 @@ const Collection = () => {
           </div>
         </div>
 
-        {/* SUB CATEGORY FILTER */}
         <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
           <p className="mb-3 text-sm font-medium">TYPE</p>
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
@@ -152,7 +147,7 @@ const Collection = () => {
                   className="w-3"
                   type="checkbox"
                   value={sub}
-                  checked={subCategory.includes(sub)}   // 🔥 auto-tick works here
+                  checked={subCategory.includes(sub)}
                   onChange={toggleSubCategory}
                 />
                 {sub}
@@ -162,7 +157,6 @@ const Collection = () => {
         </div>
       </div>
 
-      {/* ---------- PRODUCTS ---------- */}
       <div className="flex-1">
 
         <div className="flex justify-between text-base sm:text-2xl mb-4">
@@ -177,16 +171,23 @@ const Collection = () => {
           </select>
         </div>
 
+        {/* ✅ SAFE LOADING FALLBACK (NO BLANK SCREEN) */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-          {paginatedProducts.map(item => (
-            <ProductItem
-              key={item._id}
-              id={item._id}
-              name={item.name}
-              price={item.price}
-              image={item.image}
-            />
-          ))}
+          {paginatedProducts.length === 0 ? (
+            <p className="col-span-full text-center py-20 text-gray-500">
+              Loading products...
+            </p>
+          ) : (
+            paginatedProducts.map(item => (
+              <ProductItem
+                key={item._id}
+                id={item._id}
+                name={item.name}
+                price={item.price}
+                image={item.image}
+              />
+            ))
+          )}
         </div>
 
         {totalPages > 1 && (
@@ -198,13 +199,11 @@ const Collection = () => {
                   setCurrentPage(i + 1)
                   window.scrollTo({ top: 0, behavior: 'smooth' })
                 }}
-                className={`
-                  px-4 py-2 rounded-full text-sm
-                  ${currentPage === i + 1
+                className={`px-4 py-2 rounded-full text-sm ${
+                  currentPage === i + 1
                     ? 'bg-[#9f3b00] text-white'
                     : 'border border-[#9f3b00] text-[#9f3b00]'
-                  }
-                `}
+                }`}
               >
                 {i + 1}
               </button>
@@ -218,4 +217,3 @@ const Collection = () => {
 }
 
 export default Collection
-
