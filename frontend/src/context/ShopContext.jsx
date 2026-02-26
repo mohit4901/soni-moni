@@ -15,7 +15,12 @@ const ShopContextProvider = (props) => {
     const SHIPPING_CHARGES = {
         india: 100
     };
-
+    
+// ✅ BACKEND WARMUP (Render cold start fix)
+useEffect(() => {
+    fetch(backendUrl + "/health").catch(()=>{})
+}, [])
+    
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const [search, setSearch] = useState('');
@@ -179,4 +184,5 @@ const ShopContextProvider = (props) => {
 };
 
 export default ShopContextProvider;
+
 
