@@ -42,6 +42,11 @@ app.use(
   })
 )
 
+// ✅ HEALTH ROUTE (Render warmup)
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 // ✅ PREFLIGHT (MUST)
 app.options('*', cors())
 
@@ -60,4 +65,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log('Server started on PORT : ' + port)
 })
+
 
