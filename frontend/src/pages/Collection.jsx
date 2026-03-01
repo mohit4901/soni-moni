@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets'
 import Title from '../components/Title'
@@ -9,24 +9,23 @@ const PRODUCTS_PER_PAGE = 20
 
 const Collection = () => {
 
-  const { 
-    products = [], 
-    loading, 
-    search, 
-    showSearch, 
-    setSubCategory: setGlobalSubCategory 
+  const {
+    products = [],
+    loading,
+    search,
+    showSearch,
+    setSubCategory: setGlobalSubCategory
   } = useContext(ShopContext)
 
   const location = useLocation()
 
   const [showFilter, setShowFilter] = useState(false)
-  const [filterProducts, setFilterProducts] = useState([])
   const [category, setCategory] = useState([])
   const [subCategory, setSubCategory] = useState([])
   const [sortType, setSortType] = useState('relavent')
   const [currentPage, setCurrentPage] = useState(1)
 
-  // ✅ URL → Context Sync
+  // URL → Context Sync
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const urlSubCategory = params.get('subCategory')
@@ -39,75 +38,60 @@ const Collection = () => {
 
   const toggleCategory = (e) => {
     setCurrentPage(1)
-    if (category.includes(e.target.value)) {
-      setCategory(prev => prev.filter(item => item !== e.target.value))
-    } else {
-      setCategory(prev => [...prev, e.target.value])
-    }
+    const value = e.target.value
+    setCategory(prev =>
+      prev.includes(value)
+        ? prev.filter(item => item !== value)
+        : [...prev, value]
+    )
   }
 
   const toggleSubCategory = (e) => {
     setCurrentPage(1)
-    if (subCategory.includes(e.target.value)) {
-      setSubCategory(prev => prev.filter(item => item !== e.target.value))
-    } else {
-      setSubCategory(prev => [...prev, e.target.value])
-    }
+    const value = e.target.value
+    setSubCategory(prev =>
+      prev.includes(value)
+        ? prev.filter(item => item !== value)
+        : [...prev, value]
+    )
   }
 
-  const applyFilter = () => {
-    if (!products || products.length === 0) {
-      setFilterProducts([])
-      return
-    }
+  // 🔥 DERIVED FILTERED PRODUCTS (NO STATE SYNC BUG)
+  const filteredProducts = useMemo(() => {
 
-    let productsCopy = [...products]
+    let result = [...products]
 
     if (showSearch && search) {
-      productsCopy = productsCopy.filter(item =>
+      result = result.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase())
       )
     }
 
     if (category.length > 0) {
-      productsCopy = productsCopy.filter(item =>
+      result = result.filter(item =>
         category.includes(item.category)
       )
     }
 
     if (subCategory.length > 0) {
-      productsCopy = productsCopy.filter(item =>
+      result = result.filter(item =>
         subCategory.includes(item.subCategory)
       )
     }
 
-    setFilterProducts(productsCopy)
-    setCurrentPage(1)
-  }
-
-  const sortProduct = () => {
-    let fpCopy = [...filterProducts]
-
     if (sortType === 'low-high') {
-      fpCopy.sort((a, b) => a.price - b.price)
+      result.sort((a, b) => a.price - b.price)
     } else if (sortType === 'high-low') {
-      fpCopy.sort((a, b) => b.price - a.price)
+      result.sort((a, b) => b.price - a.price)
     }
 
-    setFilterProducts(fpCopy)
-  }
+    return result
 
-  useEffect(() => {
-    applyFilter()
-  }, [category, subCategory, search, showSearch, products])
+  }, [products, category, subCategory, search, showSearch, sortType])
 
-  useEffect(() => {
-    sortProduct()
-  }, [sortType])
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE)
 
-  const totalPages = Math.ceil(filterProducts.length / PRODUCTS_PER_PAGE)
-
-  const paginatedProducts = filterProducts.slice(
+  const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * PRODUCTS_PER_PAGE,
     currentPage * PRODUCTS_PER_PAGE
   )
