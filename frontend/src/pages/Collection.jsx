@@ -9,8 +9,13 @@ const PRODUCTS_PER_PAGE = 20
 
 const Collection = () => {
 
-  // ✅ ONLY ADDITION HERE (setGlobalSubCategory)
-  const { products, search, showSearch, setSubCategory: setGlobalSubCategory } = useContext(ShopContext)
+  const { 
+    products = [], 
+    loading, 
+    search, 
+    showSearch, 
+    setSubCategory: setGlobalSubCategory 
+  } = useContext(ShopContext)
 
   const location = useLocation()
 
@@ -19,17 +24,16 @@ const Collection = () => {
   const [category, setCategory] = useState([])
   const [subCategory, setSubCategory] = useState([])
   const [sortType, setSortType] = useState('relavent')
-
   const [currentPage, setCurrentPage] = useState(1)
 
-  /* ✅ UPDATED EFFECT — URL → CONTEXT SYNC */
+  // ✅ URL → Context Sync
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const urlSubCategory = params.get('subCategory')
 
     if (urlSubCategory) {
-      setSubCategory([urlSubCategory])     // existing UI logic
-      setGlobalSubCategory(urlSubCategory) // 🔥 NEW LINE (main fix)
+      setSubCategory([urlSubCategory])
+      setGlobalSubCategory(urlSubCategory)
     }
   }, [location.search])
 
@@ -52,7 +56,12 @@ const Collection = () => {
   }
 
   const applyFilter = () => {
-    let productsCopy = products.slice()
+    if (!products || products.length === 0) {
+      setFilterProducts([])
+      return
+    }
+
+    let productsCopy = [...products]
 
     if (showSearch && search) {
       productsCopy = productsCopy.filter(item =>
@@ -77,7 +86,7 @@ const Collection = () => {
   }
 
   const sortProduct = () => {
-    let fpCopy = filterProducts.slice()
+    let fpCopy = [...filterProducts]
 
     if (sortType === 'low-high') {
       fpCopy.sort((a, b) => a.price - b.price)
@@ -106,6 +115,7 @@ const Collection = () => {
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
 
+      {/* FILTER SECTION */}
       <div className="min-w-60">
 
         <p
@@ -157,6 +167,7 @@ const Collection = () => {
         </div>
       </div>
 
+      {/* PRODUCTS SECTION */}
       <div className="flex-1">
 
         <div className="flex justify-between text-base sm:text-2xl mb-4">
@@ -171,11 +182,15 @@ const Collection = () => {
           </select>
         </div>
 
-        {/* ✅ SAFE LOADING FALLBACK (NO BLANK SCREEN) */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-          {paginatedProducts.length === 0 ? (
+
+          {loading ? (
             <p className="col-span-full text-center py-20 text-gray-500">
               Loading products...
+            </p>
+          ) : paginatedProducts.length === 0 ? (
+            <p className="col-span-full text-center py-20 text-gray-500">
+              No products found.
             </p>
           ) : (
             paginatedProducts.map(item => (
@@ -188,6 +203,7 @@ const Collection = () => {
               />
             ))
           )}
+
         </div>
 
         {totalPages > 1 && (
