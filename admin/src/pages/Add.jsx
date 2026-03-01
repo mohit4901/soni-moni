@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import imageCompression from "browser-image-compression";
 
 const Add = ({ token }) => {
+
   const [images, setImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [quality, setQuality] = useState(0.8);
@@ -14,8 +15,9 @@ const Add = ({ token }) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
 
-  const [category, setCategory] = useState("kurti");
-  const [subCategory, setSubCategory] = useState("");
+  // ✅ MUST MATCH BACKEND ENUM
+  const [category, setCategory] = useState("Office Wear");
+  const [subCategory, setSubCategory] = useState("Burberry");
 
   const [sizes, setSizes] = useState([]);
   const [colour, setColour] = useState("");
@@ -81,9 +83,9 @@ const Add = ({ token }) => {
       formData.append("description", description);
       formData.append("price", price);
       formData.append("category", category);
-      formData.append("subCategory", subCategory || "");
+      formData.append("subCategory", subCategory);
       formData.append("sizes", JSON.stringify(sizes));
-      formData.append("colour", colour || "");
+      formData.append("colour", colour);
       formData.append("bestseller", bestseller);
 
       images.forEach((img) => {
@@ -112,8 +114,8 @@ const Add = ({ token }) => {
         setName("");
         setDescription("");
         setPrice("");
-        setCategory("kurti");
-        setSubCategory("");
+        setCategory("Office Wear");
+        setSubCategory("Burberry");
         setSizes([]);
         setColour("");
         setBestseller(false);
@@ -122,6 +124,7 @@ const Add = ({ token }) => {
       } else {
         toast.error(response.data.message);
       }
+
     } catch (err) {
       console.error(err);
       toast.error("Upload failed");
@@ -137,6 +140,7 @@ const Add = ({ token }) => {
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
+
       {/* ---------------- IMAGES ---------------- */}
       <div>
         <p className="mb-2">Upload Images (Drag & Drop / Click)</p>
@@ -212,20 +216,19 @@ const Add = ({ token }) => {
         className="px-3 py-2 border"
       />
 
-      {/* ---------------- CATEGORY ---------------- */}
+      {/* ---------------- CATEGORY & SUBCATEGORY ---------------- */}
       <div className="flex gap-4">
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="px-3 py-2 border"
         >
-          <option value="kurti">Kurti</option>
-          <option value="Suit">Suit</option>
           <option value="Office Wear">Office Wear</option>
-          <option value="Party Wear">Party Wear</option>
           <option value="Daily Wear">Daily Wear</option>
           <option value="Festival Wear">Festival Wear</option>
           <option value="Bridal Wear">Bridal Wear</option>
+          <option value="Suit">Suit</option>
+          <option value="Kurti">Kurti</option>
         </select>
 
         <select
@@ -301,4 +304,3 @@ const Add = ({ token }) => {
 };
 
 export default Add;
-
