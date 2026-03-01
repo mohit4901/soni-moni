@@ -3,44 +3,68 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-// ✅ LOCAL PRODUCTS (fallback only)
 import { products as localProducts } from "../assets/assets";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL; // ✅ MOVE TO TOP
+
     const currency = '₹';
 
     const SHIPPING_CHARGES = {
         india: 100
     };
-    
-// ✅ BACKEND WARMUP (Render cold start fix)
-useEffect(() => {
-    fetch(backendUrl + "/health").catch(()=>{})
-}, [])
-    
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState({});
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState(null); // ✅ null for proper loading state
     const [token, setToken] = useState('');
     const [shippingRegion, setShippingRegion] = useState("india");
 
-    // ✅ NEW (logic only)
     const [category, setCategory] = useState('');
     const [subCategory, setSubCategory] = useState('');
 
     const navigate = useNavigate();
     const delivery_fee = SHIPPING_CHARGES[shippingRegion];
 
-    // ---------------- CART LOGIC (UNCHANGED) ----------------
+    // ✅ Backend warmup (safe now)
+    useEffect(() => {
+        if (backendUrl) {
+            fetch(backendUrl + "/").catch(() => {});
+        }
+    }, [backendUrl]);
+
+    // ---------------- PRODUCTS FETCH ----------------
+
+    const getProductsData = async () => {
+        try {
+            const res = await axios.get(
+                backendUrl + '/api/product/list',
+                { params: { category, subCategory } }
+            );
+
+            if (res.data.success) {
+                setProducts(res.data.products);
+            }
+        } catch (error) {
+            console.log("Fetch failed, using local fallback");
+            setProducts(localProducts);
+        }
+    };
+
+    useEffect(() => {
+        if (backendUrl) {
+            getProductsData();
+        }
+    }, [category, subCategory, backendUrl]);
+
+    // ---------------- CART LOGIC ----------------
 
     const addToCart = async (itemId, size) => {
-        const product = products.find(p => p._id === itemId);
+        const product = products?.find(p => p._id === itemId);
 
         if (product?.sizes?.length > 0 && !size) {
             toast.error('Select Product Size');
@@ -97,7 +121,7 @@ useEffect(() => {
     const getCartAmount = () => {
         let total = 0;
         for (const id in cartItems) {
-            const product = products.find(p => p._id === id);
+            const product = products?.find(p => p._id === id);
             if (!product) continue;
             for (const s in cartItems[id]) {
                 total += product.price * cartItems[id][s];
@@ -105,27 +129,6 @@ useEffect(() => {
         }
         return total;
     };
-
-    // ---------------- PRODUCTS FETCH ----------------
-
-    const getProductsData = async () => {
-        try {
-            const res = await axios.get(
-                backendUrl + '/api/product/list',
-                { params: { category, subCategory } }
-            );
-
-            if (res.data.success) {
-                setProducts(res.data.products.reverse());
-            }
-        } catch {
-            setProducts(localProducts); // fallback
-        }
-    };
-
-    useEffect(() => {
-        getProductsData();
-    }, [category, subCategory]);
 
     // ---------------- USER CART ----------------
 
@@ -168,8 +171,6 @@ useEffect(() => {
         backendUrl,
         setToken,
         token,
-
-        // ✅ exposed for existing UI
         category,
         setCategory,
         subCategory,
@@ -184,5 +185,6 @@ useEffect(() => {
 };
 
 export default ShopContextProvider;
+
 
 
