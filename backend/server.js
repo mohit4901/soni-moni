@@ -28,6 +28,8 @@ app.use(
       'http://localhost:5173',
       'http://localhost:5174',
 
+     'https://soni-moni-admin-blush.vercel.app',
+      'https://soni-moni-theta.vercel.app',
       'https://soni-moni.vercel.app',
       'https://soni-moni-admin.vercel.app',
       'https://soni-moni-frontend.vercel.app',
@@ -65,5 +67,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log('Server started on PORT : ' + port)
 })
+
 
 
