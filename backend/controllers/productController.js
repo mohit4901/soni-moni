@@ -53,7 +53,10 @@ const addProduct = async (req, res) => {
     }
 
     // ✅ CATEGORY NORMALIZATION (MAIN FIX)
-    const safeCategory = category?.toLowerCase().trim();
+   const safeCategory = category
+  ?.toLowerCase()
+  .trim()
+  .replace(/\b\w/g, (c) => c.toUpperCase());
 
     const productData = {
       name,
