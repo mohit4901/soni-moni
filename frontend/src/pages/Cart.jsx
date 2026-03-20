@@ -16,11 +16,21 @@ const Cart = () => {
 
       for (const productId in cartItems) {
         for (const size in cartItems[productId]) {
-          if (cartItems[productId][size] > 0) {
+          const itemData = cartItems[productId][size]
+
+          // ✅ Handle new object structure safely
+          const quantity =
+            typeof itemData === 'number' ? itemData : itemData.quantity
+
+          const instruction =
+            typeof itemData === 'object' ? itemData.instruction || '' : ''
+
+          if (quantity > 0) {
             tempData.push({
               _id: productId,
               size,
-              quantity: cartItems[productId][size],
+              quantity,
+              instruction,
             })
           }
         }
@@ -42,7 +52,6 @@ const Cart = () => {
             (product) => product._id === item._id
           )
 
-          // ✅ SAFETY CHECK (MOST IMPORTANT)
           if (!productData) return null
 
           return (
@@ -55,6 +64,7 @@ const Cart = () => {
                 items-center gap-4
               "
             >
+              {/* LEFT SIDE */}
               <div className="flex items-start gap-6">
                 <img
                   className="w-16 sm:w-20 object-contain"
@@ -62,7 +72,7 @@ const Cart = () => {
                   alt={productData.name}
                 />
 
-                <div>
+                <div className="w-full">
                   <p className="text-xs sm:text-lg font-medium">
                     {productData.name}
                   </p>
@@ -76,25 +86,45 @@ const Cart = () => {
                       {item.size}
                     </p>
                   </div>
+
+                  {/* ✅ NEW: INSTRUCTION INPUT */}
+                  <input
+                    type="text"
+                    placeholder="Enter preferred color (e.g. Black, Red...)"
+                    value={item.instruction || ''}
+                    onChange={(e) =>
+                      updateQuantity(
+                        item._id,
+                        item.size,
+                        item.quantity,
+                        e.target.value // 👈 instruction
+                      )
+                    }
+                    className="mt-3 border px-2 py-1 w-full text-xs sm:text-sm rounded outline-none focus:border-black"
+                  />
                 </div>
               </div>
 
+              {/* QUANTITY */}
               <input
                 type="number"
                 min={1}
-                defaultValue={item.quantity}
-                onChange={(e) =>
-                  e.target.value === '' || e.target.value === '0'
-                    ? null
-                    : updateQuantity(
-                        item._id,
-                        item.size,
-                        Number(e.target.value)
-                      )
-                }
+                value={item.quantity}
+                onChange={(e) => {
+                  const val = e.target.value
+                  if (val === '' || val === '0') return
+
+                  updateQuantity(
+                    item._id,
+                    item.size,
+                    Number(val),
+                    item.instruction
+                  )
+                }}
                 className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
               />
 
+              {/* DELETE */}
               <img
                 onClick={() => updateQuantity(item._id, item.size, 0)}
                 className="w-4 sm:w-5 cursor-pointer"
@@ -106,13 +136,15 @@ const Cart = () => {
         })}
       </div>
 
+      {/* TOTAL + CHECKOUT */}
       <div className="flex justify-end my-20">
         <div className="w-full sm:w-[450px]">
           <CartTotal />
+
           <div className="w-full text-end">
             <button
               onClick={() => navigate('/place-order')}
-              className="bg-black text-white text-sm my-8 px-8 py-3"
+              className="bg-black text-white text-sm my-8 px-8 py-3 hover:bg-gray-800 transition"
             >
               PROCEED TO CHECKOUT
             </button>
@@ -124,4 +156,3 @@ const Cart = () => {
 }
 
 export default Cart
-
