@@ -23,6 +23,7 @@ const formatItems = (items) => {
     instruction: item.instruction || "", // ✅ ensure always present
     name: item.name || "",
     price: item.price || 0,
+    image: item.image || [] // ✅ ensure images are preserved
   }));
 };
 

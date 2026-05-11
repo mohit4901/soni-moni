@@ -243,7 +243,29 @@ const Add = ({ token }) => {
           <option value="Georgette">Georgette</option>
           <option value="Linen">Linen</option>
           <option value="Twill">Twill</option>
-          <option value="All">All</option>
+index-CeopqSOm.js:40 TypeError: Cannot read properties of undefined (reading '0')
+    at index-CeopqSOm.js:191:23972
+    at Array.map (<anonymous>)
+    at C0 (index-CeopqSOm.js:191:23642)
+    at Ji (index-CeopqSOm.js:38:16957)
+    at qo (index-CeopqSOm.js:40:3134)
+    at uf (index-CeopqSOm.js:40:44632)
+    at sf (index-CeopqSOm.js:40:39641)
+    at vh (index-CeopqSOm.js:40:39569)
+    at ts (index-CeopqSOm.js:40:39423)
+    at ii (index-CeopqSOm.js:40:35811)
+Yo @ index-CeopqSOm.js:40Understand this error
+index-CeopqSOm.js:40 Uncaught TypeError: Cannot read properties of undefined (reading '0')
+    at index-CeopqSOm.js:191:23972
+    at Array.map (<anonymous>)
+    at C0 (index-CeopqSOm.js:191:23642)
+    at Ji (index-CeopqSOm.js:38:16957)
+    at qo (index-CeopqSOm.js:40:3134)
+    at uf (index-CeopqSOm.js:40:44632)
+    at sf (index-CeopqSOm.js:40:39641)
+    at vh (index-CeopqSOm.js:40:39569)
+    at ts (index-CeopqSOm.js:40:39423)
+    at ii (index-CeopqSOm.js:40:35811)          <option value="All">All</option>
         </select>
       </div>
 

@@ -89,7 +89,8 @@ const PlaceOrder = () => {
                                 price: product.price,
                                 size: item,
                                 quantity: quantity,
-                                instruction: instruction
+                                instruction: instruction,
+                                image: product.image // ✅ ADDED
                             })
                         }
                     }
